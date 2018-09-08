@@ -36,7 +36,7 @@ protobuf {
       task.plugins {
         flit {
           option 'target=server'
-          option 'type=boot'
+          option 'type=undertow'
         }
       }
       task.dependsOn unzipFlit
