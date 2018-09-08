@@ -1,0 +1,19 @@
+
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.stephenh.twirp.ping";
+option java_outer_classname = "PingProto";
+
+service PingService {
+  rpc Ping(PingRequest) returns (PingResponse) {}
+}
+
+message PingRequest {
+  string userId = 1;
+  int64 currentTime = 2;
+}
+
+message PingResponse {
+  string errorMessage = 1;
+}
+

@@ -1,0 +1,53 @@
+plugins {
+  id "idea"
+  id "java"
+  id "com.google.protobuf" version "0.8.6"
+}
+
+repositories {
+  mavenCentral()
+  maven { url 'https://jitpack.io' }
+}
+
+def protobufVersion = '3.5.1'
+def flitDir = "$buildDir/flit"
+
+configurations {
+  flit
+}
+
+dependencies {
+  // forked flit to have a zip plugin that we can pull in via jitpack.io
+  flit 'com.github.stephenh.flit:plugin:-SNAPSHOT@zip'
+  compile "com.google.protobuf:protobuf-java:${protobufVersion}"
+}
+
+protobuf {
+  protoc {
+    artifact = "com.google.protobuf:protoc:${protobufVersion}"
+  }
+  plugins {
+    flit {
+      path = "${flitDir}/protoc-gen-flit"
+    }
+  }
+  generateProtoTasks {
+    all().each { task ->
+      task.plugins {
+        flit {
+          option 'target=server'
+          option 'type=boot'
+        }
+      }
+      task.dependsOn unzipFlit
+    }
+  }
+}
+
+task unzipFlit(type: Copy) {
+  configurations.flit.asFileTree.each {
+    from(zipTree(it))
+  }
+  into flitDir
+}
+
