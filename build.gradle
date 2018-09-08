@@ -18,8 +18,15 @@ configurations {
 
 dependencies {
   // forked flit to have a zip plugin that we can pull in via jitpack.io
-  flit 'com.github.stephenh.flit:plugin:-SNAPSHOT@zip'
+  flit 'com.github.stephenh.flit:plugin:master@zip'
   compile "com.google.protobuf:protobuf-java:${protobufVersion}"
+  compile "com.google.protobuf:protobuf-java-util:${protobufVersion}"
+  compile 'com.github.stephenh.flit:flit-undertow-runtime:master'
+}
+
+compileJava {
+  // flit is leaking lombok
+  options.compilerArgs += ["-proc:none"]
 }
 
 protobuf {
